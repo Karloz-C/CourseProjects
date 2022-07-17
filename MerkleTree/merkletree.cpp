@@ -16,23 +16,17 @@ using namespace std;
 typedef unsigned int uint;
 typedef unsigned char uchar;
 
-const int MAXN = 4;
+const int MAXN = 100000;
 
 struct MerkleTreeNode
 {
 	MerkleTreeNode* left,*right;
 	MerkleTreeNode* parent;
 	uint hash_num;
-	uchar hash_str[64];
+	uchar hash_str[32];
 	int depth;
-	MerkleTreeNode() { this->left = this->right = this->parent = nullptr; hash_num = 0; memset(hash_str, 0, 64); depth = 0; }
-	MerkleTreeNode(int depth) { this->left = this->right = this->parent = nullptr; hash_num = 0; memset(hash_str, 0, 64); this->depth = depth; };
-	MerkleTreeNode(MerkleTreeNode* left, MerkleTreeNode* right, MerkleTreeNode* parent, uint hash_num, uchar* hash_str)
-	{
-		this->left = left; this->right = right; this->parent = parent;
-		this->hash_num = hash_num;
-		strcpy((char*)this->hash_str, (const char*)hash_str);
-	}
+	MerkleTreeNode() { this->left = this->right = this->parent = nullptr; hash_num = 0; memset(hash_str, 0, 32); depth = 0; }
+	MerkleTreeNode(int depth) { this->left = this->right = this->parent = nullptr; hash_num = 0; memset(hash_str, 0, 32); this->depth = depth; };
 }*root = nullptr, *leaves[MAXN];
 
 
@@ -79,9 +73,11 @@ inline char* itos(int num, char* str, int radix)
 	return str;//返回转换后的字符串
 }
 
-inline void Hash(uchar* msg, uchar* dst)
+
+inline void printhex(uchar* c, int len)
 {
-	SHA256(msg, strlen((const char*)msg), dst);
+	FOR(i, 0, len)printf("%02x", c[i]);
+	puts("");
 }
 
 
@@ -106,36 +102,15 @@ inline MerkleTreeNode* findInsertPos(MerkleTreeNode* mt)//找到插入的位置
 }	
 
 
-//inline void update(MerkleTreeNode* mt)
-//{
-//	if (!(mt->left) && !(mt->right))return;//若为叶节点，直接返回
-//	uchar m[130];
-//	m[0] = 1;//非叶节点：0x01 
-//	FOR(i, 0, 64)m[i + 1] = mt->left->hash_str[i];
-//	m[129] = 0;
-//	update(mt->left);//更新左右子树。到达这一步说明至少有左子树。
-//	if (mt->right)
-//	{
-//		update(mt->right);
-//		FOR(i, 0, 64)m[65 + i] = mt->right->hash_str[i];
-//	}
-//	else FOR(i, 0, 64)m[65 + i] = mt->left->hash_str[i];//复制左子树
-//	Hash(m, mt->hash_str);
-//}
-
-
 inline void updateNode(MerkleTreeNode* mt)
 {
 	if (mt->depth == 0)return;
-	uchar m[66];
+	uchar m[65];
 	m[0] = 1;//非叶节点：0x01
 	FOR(i, 0, 32)m[i + 1] = mt->left->hash_str[i];
-	m[65] = 0;
-	if (mt->right)FOR(i, 0, 32)m[33 + i] = mt->right->hash_str[i];
+	if (mt->right != nullptr)FOR(i, 0, 32)m[33 + i] = mt->right->hash_str[i];
 	else FOR(i, 0, 32)m[33 + i] = mt->left->hash_str[i];
-	Hash(m, mt->hash_str);
-	if (!mt->parent)return;
-	updateNode(mt->parent);
+	SHA256(m, 65, mt->hash_str);
 }
 
 
@@ -152,7 +127,7 @@ inline MerkleTreeNode* build(MerkleTreeNode* mt, uint* arr, int num)
 		node->hash_num = *arr;
 		char* data = new char[16];
 		itos(*arr, data, 10);
-		Hash((uchar*)data, node->hash_str);
+		SHA256((const uchar*)data, strlen(data), node->hash_str);
 		delete[] data;
 
 		if (mt == nullptr)//为空，此时没有树，需要先创建一个头部节点
@@ -163,7 +138,6 @@ inline MerkleTreeNode* build(MerkleTreeNode* mt, uint* arr, int num)
 
 			updateNode(mt);
 
-			//mt = build(mt, arr + 1, num - 1);
 		}
 		else
 		{
@@ -174,6 +148,11 @@ inline MerkleTreeNode* build(MerkleTreeNode* mt, uint* arr, int num)
 				{
 					p->right = node;
 					node->parent = p;
+					while (p != mt)
+					{
+						updateNode(p);
+						p = p->parent;
+					}
 					updateNode(p);
 				}
 				else
@@ -205,7 +184,6 @@ inline MerkleTreeNode* build(MerkleTreeNode* mt, uint* arr, int num)
 					}
 					updateNode(p);
 				}
-				//mt = build(mt, arr + 1, num - 1);
 			}
 			else
 			{
@@ -221,14 +199,15 @@ inline MerkleTreeNode* build(MerkleTreeNode* mt, uint* arr, int num)
 				p = mt->right;
 				dep = p->depth - 1;
 
-				//while (dep > 0)
-				//{
-				//	tmp = new MerkleTreeNode(dep);
-				//	p->left = tmp;
-				//	tmp->parent = p;
-				//	p = p->left;
-				//	dep--;
-				//}
+				while (dep > 0)
+				{
+					tmp = new MerkleTreeNode(dep);
+					p->left = tmp;
+					tmp->parent = p;
+					p = p->left;
+					dep--;
+				}
+
 				p->left = node;
 				node->parent = p;
 
@@ -238,11 +217,91 @@ inline MerkleTreeNode* build(MerkleTreeNode* mt, uint* arr, int num)
 					p = p->parent;
 				}
 				updateNode(p);
-				//mt = build(mt, arr + 1, num - 1);
 			}
 		}
 	}
 	return mt;
+}
+
+
+inline int isleft(MerkleTreeNode* mt)
+{
+	MerkleTreeNode* p = mt->parent;
+	if (p->right == mt)return 0;
+	else
+		if (p->right)return 1;
+		else return -1;
+}
+
+
+inline void mergePeer(MerkleTreeNode* mt, uchar* dst, uchar* hs)//寻找兄弟节点并计算合并hash值
+{
+	uchar h1[32], h2[32];
+	uchar msg[65];
+	msg[0] = 1;
+	MerkleTreeNode* p = mt->parent, * tmp;
+	if (!p)return;//没有上级节点，说明到达根，没有兄弟节点
+
+	if (p->right == mt)//是右子树，则一定有左子树
+	{
+		tmp = p->left;
+		FOR(i, 0, 32)
+		{
+			msg[i + 1] = tmp->hash_str[i];
+			msg[i + 33] = hs[i];
+		}
+	}
+	else//是左子树
+	{
+		if (p->right)//有右子树
+		{
+			tmp = p->right;
+			FOR(i, 0, 32)
+			{
+				msg[i + 1] = hs[i];
+				msg[i + 33] = tmp->hash_str[i];
+			}
+		}
+		else //没有右子树，复制自身用于计算hash
+		{
+			FOR(i, 0, 32)
+			{
+				msg[i + 1] = hs[i];
+				msg[i + 33] = hs[i];
+			}
+		}
+	}
+	SHA256(msg, 65, dst);
+}
+
+
+inline bool cmp(uchar* s1, uchar* s2, int len)
+{
+	FOR(i, 0, len)if (s1[i] != s2[i])return 1;
+	return 0;
+}
+
+
+inline int inProve(const char* data, int id)//证明数据data在树中，且在第id号点中
+{
+	MerkleTreeNode* p = leaves[id];//方便查找，提前存下所有叶子节点的位置
+	uchar h1[32];	
+	uchar h[32];
+	SHA256((const uchar*)data, strlen(data), h1);
+
+	mergePeer(p, h, h1);
+
+	while (p != root)
+	{
+		p = p->parent;
+		if (p == root)break;
+		mergePeer(p, h, h);
+	}
+	printf("final: ");
+	printhex(h, 32);
+	printf("root hash: ");
+	printhex(root->hash_str, 32);
+	return !cmp(h, root->hash_str, 32);
 }
 
 
@@ -252,16 +311,10 @@ inline void init()
 }
 
 
-inline void printhex(uchar* c, int len)
-{
-	FOR(i, 0, len)printf("%02x", c[i]);
-	puts("");
-}
-
 
 inline void dfs(MerkleTreeNode* t)
 {
-	if (t->depth == 0)
+	if (!t->left && !t->right)
 	{
 		printf("leaf%d " , t->hash_num);
 		printhex(t->hash_str, 32);
@@ -272,12 +325,17 @@ inline void dfs(MerkleTreeNode* t)
 	if (t->right)dfs(t->right);
 }
 
+#define exec
 
-//int main()
-//{
-//	init();
-//	FOR(i, 0, MAXN)
-//	root = build(root, Data+i, MAXN-i);
-//	dfs(root);
-//	return 0;
-//}
+#ifdef exec
+int main()
+{
+	init();
+	FOR(i, 0, MAXN)root = build(root, Data + i, MAXN - i);
+
+	printf("%d\n", inProve("0", 0));
+	printf("%d\n", inProve("0", 1));
+	return 0;
+}
+#endif // main
+

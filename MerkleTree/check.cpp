@@ -29,14 +29,16 @@ inline void hex2str(string src, char* dst)
 	for (int i = 0; i < src.size(); i += 2)dst[i / 2] = hex2int(src[i]) * 16 + hex2int(src[i + 1]);
 }
 
+//#define test 
 
+#ifdef test
 int main()
 {
 	uchar t1[32], t2[32];
-	uchar t[66];
-	t[0] = 1; t[65] = 0;
+	uchar t[65];
+	t[0] = 1;
 	string s1 = "775921a4e428d5768955ee440c81d193960641c3a5b2c1f71916fcebe285e2c5";
-	string s2 = "9eacac1f1d19d078906cb14930cb9e864bf512aac3f8e26153666d5eaef7b387";
+	string s2 = "775921a4e428d5768955ee440c81d193960641c3a5b2c1f71916fcebe285e2c5";
 	hex2str(s1, (char*)t1); hex2str(s2, (char*)t2);
 	FOR(i, 0, 32)
 	{
@@ -48,6 +50,10 @@ int main()
 	SHA256(t, 65, d);
 	FOR(i, 0, 32)printf("%02x", d[i]);
 }
+#endif // test
+
+
+
 
 //e8fb69d07523527f600e1fd288b9be6dd210431e2cfd0f2dfc7576b513ec9e77
 //775921a4e428d5768955ee440c81d193960641c3a5b2c1f71916fcebe285e2c5
