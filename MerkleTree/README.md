@@ -6,7 +6,7 @@
 
 设置${10}^5$个节点。为方便检查，令第i个点中保存的数据为数字i的字符串形式。
 
-节点结构如下：
+节点结构如下： 
 
 包括左右子树，深度，保存的hash值。
 
@@ -53,4 +53,4 @@ struct MerkleTreeNode
 
 结果见下图，分别证明数据0是否在0号和1号节点中，可见证明有效。
 
-![image-20220717205607711](C:\Users\Karloz\AppData\Roaming\Typora\typora-user-images\image-20220717205607711.png)
+![result](./result.png)
