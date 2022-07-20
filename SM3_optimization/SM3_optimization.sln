@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32630.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SM3_optimization", "SM3_optimization.vcxproj", "{7A91729F-1AEC-468B-A6E8-17D22FBCEE9E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A91729F-1AEC-468B-A6E8-17D22FBCEE9E}.Debug|x64.ActiveCfg = Debug|x64
+		{7A91729F-1AEC-468B-A6E8-17D22FBCEE9E}.Debug|x64.Build.0 = Debug|x64
+		{7A91729F-1AEC-468B-A6E8-17D22FBCEE9E}.Debug|x86.ActiveCfg = Debug|Win32
+		{7A91729F-1AEC-468B-A6E8-17D22FBCEE9E}.Debug|x86.Build.0 = Debug|Win32
+		{7A91729F-1AEC-468B-A6E8-17D22FBCEE9E}.Release|x64.ActiveCfg = Release|x64
+		{7A91729F-1AEC-468B-A6E8-17D22FBCEE9E}.Release|x64.Build.0 = Release|x64
+		{7A91729F-1AEC-468B-A6E8-17D22FBCEE9E}.Release|x86.ActiveCfg = Release|Win32
+		{7A91729F-1AEC-468B-A6E8-17D22FBCEE9E}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0251693E-7D5C-48F1-AF4A-022C5B9E9F67}
+	EndGlobalSection
+EndGlobal
