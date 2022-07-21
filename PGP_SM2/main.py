@@ -1,16 +1,9 @@
 import hashlib
 import random
 import binascii
-<<<<<<< HEAD
 from math import gcd, log2, ceil
 from Curve import Point, CurveFp
 from gmssl import sm2
-=======
-from Crypto.Cipher import AES
-from math import gcd, log2, ceil
-from Curve import Point, CurveFp, inv_mod
-from gmssl import sm2, func
->>>>>>> origin/master
 from gmssl.sm4 import CryptSM4, SM4_ENCRYPT, SM4_DECRYPT
 
 string_types = (str)
@@ -18,18 +11,9 @@ string_or_bytes_types = (str, bytes)
 int_types = (int, float)
 
 # 方便处理字符串与数字转换
-<<<<<<< HEAD
+
 code_strings = \
-    {
-        2: '01',
-        10: '0123456789',
-        16: '0123456789abcdef',
-        32: 'abcdefghijklmnopqrstuvwxyz234567',
-        58: '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz',
-        256: ''.join([chr(x) for x in range(256)])
-    }
-=======
-code_strings = {
+{
     2: '01',
     10: '0123456789',
     16: '0123456789abcdef',
@@ -37,7 +21,6 @@ code_strings = {
     58: '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz',
     256: ''.join([chr(x) for x in range(256)])
 }
->>>>>>> origin/master
 
 n = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123
 p = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF
@@ -194,20 +177,13 @@ message = b'hello'
 # A encrypt session key
 cipher_A = sm2.CryptSM2(None, point2hex(P_B))
 ciphertext = cipher_A.encrypt(K_A.encode())
-<<<<<<< HEAD
 # print(ciphertext)
-=======
-#print(ciphertext)
->>>>>>> origin/master
+
 
 # B decrypt
 cipher_B = sm2.CryptSM2(hex2str(d_B), point2hex(P_B))
 key_str = cipher_B.decrypt(ciphertext)
-<<<<<<< HEAD
 # print(key_str)
-=======
-#print(key_str)
->>>>>>> origin/master
 
 key = binascii.a2b_hex(key_str)
 
