@@ -6,21 +6,6 @@ from Curve import Point, CurveFp
 from gmssl import sm2
 from gmssl.sm4 import CryptSM4, SM4_ENCRYPT, SM4_DECRYPT
 
-string_types = (str)
-string_or_bytes_types = (str, bytes)
-int_types = (int, float)
-
-# 方便处理字符串与数字转换
-
-code_strings = \
-{
-    2: '01',
-    10: '0123456789',
-    16: '0123456789abcdef',
-    32: 'abcdefghijklmnopqrstuvwxyz234567',
-    58: '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz',
-    256: ''.join([chr(x) for x in range(256)])
-}
 
 n = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123
 p = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF
@@ -53,59 +38,6 @@ def KDF(Z, length):
         K += Hash((Z + str(ct).format("08x")))
         ct += 1
     return K[:length]
-
-
-def get_code_string(base):
-    if base in code_strings:
-        return code_strings[base]
-    else:
-        raise ValueError("Invalid base!")
-
-
-# 按照base进制编码 数字->字符
-def encode(val, base, minlen=0):
-    base, minlen = int(base), int(minlen)
-    code_string = get_code_string(base)
-    result_bytes = bytes()
-    while val > 0:
-        curcode = code_string[val % base]
-        result_bytes = bytes([ord(curcode)]) + result_bytes
-        val //= base
-
-    pad_size = minlen - len(result_bytes)
-
-    padding_element = b'\x00' if base == 256 else b'1' \
-        if base == 58 else b'0'
-    if pad_size > 0:
-        result_bytes = padding_element * pad_size + result_bytes
-
-    result_string = ''.join([chr(y) for y in result_bytes])
-    result = result_bytes if base == 256 else result_string
-
-    return result
-
-
-# 同理 解码
-def decode(string, base):
-    if base == 256 and isinstance(string, str):
-        string = bytes(bytearray.fromhex(string))
-    base = int(base)
-    code_string = get_code_string(base)
-    result = 0
-    if base == 256:
-        def extract(d, cs):
-            return d
-    else:
-        def extract(d, cs):
-            return cs.find(d if isinstance(d, str) else chr(d))
-
-    if base == 16:
-        string = string.lower()
-    while len(string) > 0:
-        result *= base
-        result += extract(string[0], code_string)
-        string = string[1:]
-    return result
 
 
 # generate ID and key
