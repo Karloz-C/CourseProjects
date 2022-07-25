@@ -56,6 +56,10 @@
 
 编写测试代码，验证各种ECC签名算法的漏洞。
 
+14. **Project: Implement the above ECMH scheme**
+
+实现了将集合hash到椭圆曲线点的ECMH方案，并验证了其同态性质。
+
 ##### 存在问题的项目
 
 11. **Project: forge a signature to pretend that you are Satoshi**

@@ -77,3 +77,4 @@ def setHash(s):
 
 直接运行main.py。
 
+==注：需要同时下载Curve.py文件，其中包含了椭圆曲线群的实现。==

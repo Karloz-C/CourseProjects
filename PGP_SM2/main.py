@@ -6,7 +6,6 @@ from Curve import Point, CurveFp
 from gmssl import sm2
 from gmssl.sm4 import CryptSM4, SM4_ENCRYPT, SM4_DECRYPT
 
-
 n = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123
 p = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF
 g_X = 0x32c4ae2c1f1981195f9904466a39c9948fe30bbff2660be1715a4589334c74c7
@@ -102,7 +101,8 @@ S_2 = Hash('\x03' + hex2str(V.y) + Hash(
     hex2str(V.x) + Z_A + Z_B + hex2str(R_A.x) + hex2str(R_A.y) + hex2str(R_B.x) + hex2str(R_B.y)))
 if S_2 != S_A:
     print("Wrong4")
-print('session key:', K_A)
+print('session key:')
+print('K_A:', K_A, '\nK_B:', K_B, sep='')
 
 # session
 message = b'hello'

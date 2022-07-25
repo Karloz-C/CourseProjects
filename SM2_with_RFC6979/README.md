@@ -88,7 +88,7 @@ Given the input message m, the following process is applied:
    would induce biases that would be detrimental to signature security.
 ```
 
-根据此文档，使用python，通过hmac，hashlib等库函数实现k的生成部分。引用了轻量化的椭圆曲线库Curve实现sm2的计算。最终实现了签名值的生成并检查了验证的正确性。
+根据此文档，使用python，通过hmac，hashlib等库函数实现k的生成部分。参考资料实现了轻量化的椭圆曲线库Curve实现sm2的计算，并应用于后续项目。最终实现了签名值的生成并检查了验证的正确性。
 
 参考文档内容，编写生成k的函数：
 

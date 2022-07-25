@@ -1,5 +1,4 @@
-import random
-
+# exgcd求逆
 def inv_mod(b, p):
     if b < 0 or p <= b:
         b = b % p
@@ -28,20 +27,13 @@ def leftmost_bit(x):
 class CurveFp(object):
 
     def __init__(self, p, a, b):
-        """ 椭圆曲线方程y^2 = x^3 + a*x + b (mod p)."""
+        # 标识椭圆曲线方程y^2=x^3+ax+b mod p
         self.p = p
         self.a = a
         self.b = b
 
     def contains_point(self, x, y):
         return (y * y - (x * x * x + self.a * x + self.b)) % self.p == 0
-
-    def show_all_points(self):
-        return [(x, y) for x in range(self.p) for y in range(self.p) if
-                (y * y - (x * x * x + self.a * x + self.b)) % self.p == 0]
-
-    def __repr__(self):
-        return "Curve(p={0:d}, a={1:d}, b={2:d})".format(self.p, self.a, self.b)
 
 
 class Point(object):
@@ -59,7 +51,6 @@ class Point(object):
             assert self * order == INFINITY
 
     def __eq__(self, other):
-        """两个点是否重合"""
         if self.curve == other.curve \
                 and self.x == other.x \
                 and self.y == other.y:
@@ -68,8 +59,6 @@ class Point(object):
             return False
 
     def __add__(self, other):
-        """两个点‘相加’"""
-
         if other == INFINITY:
             return self
         if self == INFINITY:
@@ -92,6 +81,7 @@ class Point(object):
         return Point(self.curve, x3, y3)
 
     def __mul__(self, other):
+        # 点乘数
         e = other
         if self.order:
             e = e % self.order
@@ -115,16 +105,11 @@ class Point(object):
         return result
 
     def __rmul__(self, other):
-        """一个点乘以一个整数"""
+        # 数乘点
         return self * other
 
-    def __repr__(self):
-        if self == INFINITY:
-            return "infinity"
-        return "({0},{1})".format(self.x, self.y)
 
     def double(self):
-        """the double point."""
         if self == INFINITY:
             return INFINITY
 
