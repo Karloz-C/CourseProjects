@@ -10,7 +10,7 @@
 
 2. **Project: implement the Rho method of reduced SM3**
 
-使用低存储的$\rho$方法寻找碰撞，解释性语言的特性使得暂时只能找到16位的碰撞。
+使用低存储的$\rho$方法寻找碰撞，解释性语言的运行速度慢，在可接受的时间内暂时只能找到16位的碰撞。
 
 3. **Project: implement length extension attack for SM3, SHA256, etc.**
 
