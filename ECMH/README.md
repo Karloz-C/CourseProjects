@@ -41,20 +41,6 @@ def Cipolla(n, p):
 
 于是原式$=(a-i)(a+i)=a^2-i^2=n$。也即$(a+i)^{p+1}=n$，自然$(a+i)^{\frac{p+1}{2}}$就是原方程的一个解。
 
-```python
-def Cipolla(n, p):
-    while True:
-        a = random.randint(0, p - 1)
-        if legendre(a * a - n, p) == p - 1:
-            break
-    u = C(a, 1)
-    u = Cpow(a, n, p, u, (p + 1) // 2)
-    # 平方根存在两个解，且一定为y和p-y的形式(y<p/2)。为保证hash值唯一性，取较大的一个。
-    if u.a < p // 2:
-        u.a = p - u.a
-    return u.a % p
-```
-
 这样就实现了将一条消息hash到椭圆曲线上的点。
 
 ```python
