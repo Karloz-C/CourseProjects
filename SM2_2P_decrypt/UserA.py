@@ -41,7 +41,7 @@ def xor(A, B):
     binA = "{:0128b}".format(A)
     binB = "{:0128b}".format(B)
     res = []
-    for _ in range(len(binA)):
+    for i in range(len(binA)):
         res.append(str(int(binA[i]) ^ int(binB[i])))
     return int(''.join(res), 2)
 
