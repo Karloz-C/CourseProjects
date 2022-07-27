@@ -19,7 +19,7 @@ def int2str(n):
 
 
 def Hash(msg):
-    return hashlib.md5(msg.encode()).hexdigest()
+    return hashlib.sha256(msg.encode()).hexdigest()
 
 
 def sm2_sign(m, d, k=0):

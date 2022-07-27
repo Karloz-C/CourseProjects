@@ -18,7 +18,7 @@ G = Point(E, g_X, g_Y)
 
 
 def Hash(msg):
-    return hashlib.md5(msg.encode()).hexdigest()
+    return hashlib.sha256(msg.encode()).hexdigest()
 
 
 def point2hex(p):

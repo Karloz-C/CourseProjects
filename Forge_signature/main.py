@@ -20,7 +20,7 @@ msg = 'forge_signature'
 
 
 def Hash(msg):
-    return hashlib.md5(msg.encode()).hexdigest()
+    return hashlib.sha256(msg.encode()).hexdigest()
 
 
 def sign(d, m):

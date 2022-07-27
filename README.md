@@ -60,6 +60,10 @@
 
 实现了将集合hash到椭圆曲线点的ECMH方案，并验证了其同态性质。
 
+15. **Project: PoC impl of the scheme, or do implement analysis by Google**
+
+在真实网络交互的场景下实现了基于argon2的口令检查方案。
+
 ##### 存在问题的项目
 
 11. **Project: forge a signature to pretend that you are Satoshi**
@@ -73,3 +77,64 @@
 为了进一步推进项目，人为修改了原库函数的过程。将AES一轮加解密的过程替换成了简单的异或。这样做的影响仅在于安全方面的特性，而本项目的核心思想没有改变。因为AES本身可逆，在本质上可以替换成任意一种可逆运算，这里的替换只是由于暂未解决加解密一致的问题。
 
 除了这一个部分，其它的过程都与原库函数过程完全一致，实现了整体逻辑和过程的逆向，并最终得到了正确的密钥。
+
+###### 更新日志
+
+22-05-15：提交项目
+
+**Project: implement length extension attack for SM3, SHA256, etc.**。
+
+22-07-16：提交项目
+
+**Project: implement the Rho method of reduced SM3**
+
+**Project: implement the naïve birthday attack of reduced SM3**。
+
+22-07-17：提交项目
+
+**Project: Impl Merkle Tree following RFC6962**
+
+22-07-18：提交项目
+
+**Project: Find a key with hash value “sdu_cst_20220610” under a message composed of your name followed by your student ID. For example, “San Zhan 202000460001**
+
+22-07-19：提交项目
+
+**Project: impl sm2 with RFC6979**
+
+22-07-20：提交项目
+
+**Project: do your best to optimize SM3 implementation (software)**
+
+22-07-21：提交项目
+
+**Project: Implement a PGP scheme with SM2**
+
+22-07-22：提交项目
+
+**Project: implement sm2 2P sign with real network communication**
+
+**Project: implement sm2 2P decrypt with real network communication**
+
+22-07-25：
+
+提交项目
+
+**Project: verify the above pitfalls with proof-of-concept code**
+
+**Project: Implement the above ECMH scheme**
+
+更新了部分项目的README。
+
+更新了椭圆曲线相关库函数。
+
+根据代码运行环境需要，上传了OpenSSL库。
+
+22-07-26：
+
+更新了所有项目中涉及到的的hash函数，考虑到安全性，将md5等不再安全的算法更换成SHA256。
+
+22-07-27：提交项目
+
+**Project: PoC impl of the scheme, or do implement analysis by Google**
+

@@ -59,7 +59,7 @@ def Cipolla(n, p):
 
 def Hash(msg):
     # 将单个点使用md5映射到椭圆曲线点的横坐标
-    x = int(hashlib.md5(msg.encode()).hexdigest(), 16) % p
+    x = int(hashlib.sha256(msg.encode()).hexdigest(), 16) % p
     temp = x ** 3 + a * x + b
     while legendre(temp, p) != 1:
         x += 1
