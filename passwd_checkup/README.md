@@ -154,7 +154,7 @@ def Argon2(u, p, hlen):
 
 #### 运行指导
 
-首先需要按照argon2库。
+首先需要安装argon2库。
 
 在命令行中输入：pip install argon2-cffi即可。
 
