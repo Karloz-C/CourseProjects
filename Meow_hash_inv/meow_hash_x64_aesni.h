@@ -171,7 +171,6 @@
 #define movdqu_mem(A, B)  _mm_storeu_si128((__m128i *)(A), B)
 #define movq(A, B) A = _mm_set_epi64x(0, B);
 #define aesdec(A, B)  A = _mm_aesdec_si128(A, B)
-#define aesenc(A, B)  A = _mm_aesenc_si128(A, B)//
 #define pshufb(A, B)  A = _mm_shuffle_epi8(A, B)
 #define pxor(A, B)    A = _mm_xor_si128(A, B)
 #define paddq(A, B) A = _mm_add_epi64(A, B)
@@ -180,19 +179,49 @@
 #define palignr(A, B, i) A = _mm_alignr_epi8(A, B, i)
 #define pxor_clear(A, B)    A = _mm_setzero_si128(); // NOTE(casey): pxor_clear is a nonsense thing that is only here because compilers don't detect xor(a, a) is clearing a :(
 
-void mixcolumn(__m128i A, __m128i B)
+
+__m128i Shiftrows(__m128i A)
 {
-    __m128i z = _mm_setzero_si128();
-    A = _mm_aesdeclast_si128(B, z);
-    A = _mm_aesenc_si128(A, z);
+    __m128i ISOLATE_SROWS_MASK = _mm_set_epi32(0x0B06010C, 0x07020D08, 0x030E0904, 0x0F0A0500);
+    A = _mm_shuffle_epi8(A, ISOLATE_SROWS_MASK);
+    return A;
 }
 
+
+__m128i Mixcolumns(__m128i A)
+{
+    __m128i ZERO = _mm_setzero_si128();
+    A = _mm_aesdeclast_si128(A, ZERO);
+    A = _mm_aesenc_si128(A, ZERO);
+    return A;
+}
+
+
+__m128i SubBytes(__m128i &A)
+{
+    __m128i ISOLATE_SBOX_MASK = _mm_set_epi32(0x0306090C, 0x0F020508, 0x0B0E0104, 0x070A0D00);
+    A = _mm_shuffle_epi8(A, ISOLATE_SBOX_MASK);
+    __m128i ZERO = _mm_setzero_si128();
+    A = _mm_aesenclast_si128(A, ZERO);
+    return A;
+}
+
+
+void aesdec_inv(__m128i &A, __m128i B)
+{
+    A = _mm_xor_si128(A, B);
+    A = Mixcolumns(A);
+    A = SubBytes(A);
+    A = Shiftrows(A);
+}
+
+
 #define MEOW_MIX_REG(r1, r2, r3, r4, r5,  i1, i2, i3, i4) \
-pxor(r1, r2); \
+aesdec(r1, r2); \
 INSTRUCTION_REORDER_BARRIER; \
 paddq(r3, i1); \
 pxor(r2, i2); \
-pxor(r2, r4); \
+aesdec(r2, r4); \
 INSTRUCTION_REORDER_BARRIER; \
 paddq(r5, i3); \
 pxor(r4, i4)
@@ -202,11 +231,11 @@ pxor(r4, i4)
 #define MEOW_MIX_REG_re(r1, r2, r3, r4, r5,  i1, i2, i3, i4)\
 pxor(r4, i4);\
 psubq(r5, i3); \
-pxor(r2, r4); \
+aesdec_inv(r2, r4); \
 INSTRUCTION_REORDER_BARRIER; \
 pxor(r2, i2); \
 psubq(r3, i1); \
-pxor(r1, r2); \
+aesdec_inv(r1, r2); \
 INSTRUCTION_REORDER_BARRIER
 
 
@@ -218,10 +247,10 @@ MEOW_MIX_REG_re(r1, r2, r3, r4, r5, _mm_loadu_si128( (__m128i *) ((ptr) + 15) ),
 
 
 #define MEOW_SHUFFLE(r1, r2, r3, r4, r5, r6) \
-pxor(r1, r4); \
+aesdec(r1, r4); \
 paddq(r2, r5); \
 pxor(r4, r6); \
-pxor(r4, r2); \
+aesdec(r4, r2); \
 paddq(r5, r6); \
 pxor(r2, r3)
 
@@ -229,10 +258,10 @@ pxor(r2, r3)
 #define MEOW_SHUFFLE_re(r1, r2, r3, r4, r5, r6) \
 pxor(r2, r3);\
 psubq(r5, r6); \
-pxor(r4, r2); \
+aesdec_inv(r4, r2); \
 pxor(r4, r6); \
 psubq(r2, r5); \
-pxor(r1, r4)
+aesdec_inv(r1, r4)
 
 
 #if MEOW_DUMP

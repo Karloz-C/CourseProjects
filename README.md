@@ -70,14 +70,6 @@
 
 由于并未搜索到明确属于中本聪本人的公钥，这里选择随机生成了一对公私钥，但伪造的原理依然适用。
 
-12. **Project: Find a key with hash value “sdu_cst_20220610” under a message composed of your name followed by your student ID. For example, “San Zhan 202000460001**
-
-本项目基于使用AES-NI指令集的meow_hash库，其中的一轮解密模块对应的逆过程并不是使用同一个密钥进行一轮加密。搜索到的办法是先将密钥通过加解密组合的方式进行列混合得到等价密钥，再进行加密，但多次尝试后实验结果仍不正确。**也就是说，暂时没有解决AES-NI指令集一轮解密过程的逆向。**
-
-为了进一步推进项目，人为修改了原库函数的过程。将AES一轮加解密的过程替换成了简单的异或。这样做的影响仅在于安全方面的特性，而本项目的核心思想没有改变。因为AES本身可逆，在本质上可以替换成任意一种可逆运算，这里的替换只是由于暂未解决加解密一致的问题。
-
-除了这一个部分，其它的过程都与原库函数过程完全一致，实现了整体逻辑和过程的逆向，并最终得到了正确的密钥。
-
 ###### 更新日志
 
 22-05-15：提交项目
@@ -137,4 +129,6 @@
 22-07-27：提交项目
 
 **Project: PoC impl of the scheme, or do implement analysis by Google**
+
+**Project: Find a 64-byte message under some k fulfilling that their hash value is symmetrical**
 

@@ -4,19 +4,19 @@
 
 ------
 
-##### 实现思路
+#### 代码说明
 
 根据计算hash的过程，将整个函数以及其中的组件逆向转化成求解key的函数。
 
-逆向包括逆运算和逆序两个部分。
+逆向包括**逆运算**和**逆序**两个部分。
 
-首先，对于计算顺序，还原的过程应与原函数相反，确保数据的时序性。
+首先，对于计算顺序，还原的过程应与原函数相反，确保数据的时序。
 
 然后对于各种独立的运算，应当修改为逆运算。比如：加法改为减法，解密改为加密。由于异或操作自身可逆，不需要改动。
 
 原函数如下，分析其过程。
 
-在最开始，可以明确rax和rcx分别保存了输入的信息和key。最开始的时候将key的每16字节（128bit）存放在128位simd寄存器中，参与了一系列运算。
+在最开始，可以明确rax和rcx分别保存了输入的信息和key。最开始的时候将key的每16字节（128bit）存放在128位SIMD寄存器中，参与了一系列运算。
 
 ```c++
 MeowHash(void *Seed128Init, meow_umm Len, void *SourceInit)
@@ -207,11 +207,11 @@ MeowHash(void *Seed128Init, meow_umm Len, void *SourceInit)
 }
 ```
 
-函数的最后，发现返回了xmm0。说明最终的hash值保存在xmm0中。
+函数的最后，返回了xmm0，而返回值正是hash函数的计算结果。这说明最终的hash值保存在xmm0中。
 
-那么当逆向还原的时候，xmm0就应当被赋值为已知的hash值。从最后一行逆向往上看，可以看到，不同组数据进行了一些运算，而此时我们只知道xmm0的值，而不能确定其它寄存器中的状态。
+那么当逆向还原的时候，xmm0就应当被赋值为已知的hash值。从最后一行逆向往上看，可以看到，有多个寄存器参与了一系列运算，而此时我们只知道xmm0的值，不能确定其它寄存器中的状态。
 
-事实上，到了最后的运算，xmm0~xmm15中的数据都是完全由密钥key和输入数据决定的。输入数据已知，不会改变。这说明：一种key可以唯一决定一种状态。反之，由于整个运算过程都是可逆的，任意给出一种状态，一定可以确定一个密钥。
+事实上，到了最后的运算（即上面代码中175行以后的部分），xmm0~xmm15中的数据都是完全由密钥key和输入数据决定的。在正向执行的情况下，输入数据已知且不会改变。这说明：一种key可以唯一决定一种状态。反之，由于整个运算过程都是可逆的，任意给出一种状态，一定可以确定一个密钥。
 
 因此，这里可以随意设置寄存器状态，赋予任意的值，最后得到一种密钥。方便起见，全部置为0。
 
@@ -392,9 +392,124 @@ static void MeowHash_re(void* hash, meow_umm Len, void* SourceInit, unsigned cha
 }
 ```
 
+------
+
+上面描述的只是hash函数整体的总结构，并没有涉及到其中的组件。而这些组件是本项目的重点所在，也是最为困难的地方。下面将详细介绍。
+
+最重要的两个部分是**MEOW_MIX_REG**函数和**MEOW_SHUFFLE**函数。其定义如下：
+
+```C
+#define MEOW_MIX_REG(r1, r2, r3, r4, r5,  i1, i2, i3, i4) \
+aesdec(r1, r2); \
+INSTRUCTION_REORDER_BARRIER; \
+paddq(r3, i1); \
+pxor(r2, i2); \
+aesdec(r2, r4); \
+INSTRUCTION_REORDER_BARRIER; \
+paddq(r5, i3); \
+pxor(r4, i4)
+```
+
+```c
+#define MEOW_SHUFFLE(r1, r2, r3, r4, r5, r6) \
+aesdec(r1, r4); \
+paddq(r2, r5); \
+pxor(r4, r6); \
+aesdec(r4, r2); \
+paddq(r5, r6); \
+pxor(r2, r3)
+```
+
+可以看到，其中包括的AES解密，加法，异或运算都是可逆的运算。因此整个函数也是可逆的，只需要将运算的顺序颠倒，并且修改为对应的逆运算即可实现。
+
+对应的逆向过程如下：
+
+```c
+#define MEOW_MIX_REG_re(r1, r2, r3, r4, r5,  i1, i2, i3, i4)\
+pxor(r4, i4);\
+psubq(r5, i3); \
+aesdec_inv(r2, r4); \
+INSTRUCTION_REORDER_BARRIER; \
+pxor(r2, i2); \
+psubq(r3, i1); \
+aesdec_inv(r1, r2); \
+INSTRUCTION_REORDER_BARRIER
+```
+
+```c
+#define MEOW_SHUFFLE_re(r1, r2, r3, r4, r5, r6) \
+pxor(r2, r3);\
+psubq(r5, r6); \
+aesdec_inv(r4, r2); \
+pxor(r4, r6); \
+psubq(r2, r5); \
+aesdec_inv(r1, r4)
+```
+
+其中，加法和异或很简单，改为减法和异或即可。而AES部分出现了困难的问题。
+
+原因是：meow_hash实现中的AES一轮解密基于AES-NI指令集，而该指令集采用了等价解密的设计。这导致一个严重的问题，就是**AES一轮加密并不是一轮解密的逆过程**。这使得该函数的逆向还原出现了困难。
+
+为了解决该问题，我研究了Intel对于AES-NI指令集设计的白皮书，最终找到了正确方法。
+
+首先观察_mm_aesdec_si128函数。
+
+![image-20220727220942925](./aesdec.png)
+
+按顺序执行了逆行移位、逆S盒、逆列混合、异或密钥四个步骤。
+
+既然函数整体找不到一个逆过程，则可以分开处理。也就是说，我们可以分别实现上述四个步骤的逆过程，再反向执行回去。
+
+白皮书中提供了实现这些过程的方法：
+
+![image-20220727221210818](./method.png)
+
+对应的实现如下：
+
+```c
+__m128i Shiftrows(__m128i A)
+{
+    __m128i ISOLATE_SROWS_MASK = _mm_set_epi32(0x0B06010C, 0x07020D08, 0x030E0904, 0x0F0A0500);
+    A = _mm_shuffle_epi8(A, ISOLATE_SROWS_MASK);
+    return A;
+}
+
+
+__m128i Mixcolumns(__m128i A)
+{
+    __m128i ZERO = _mm_setzero_si128();
+    A = _mm_aesdeclast_si128(A, ZERO);
+    A = _mm_aesenc_si128(A, ZERO);
+    return A;
+}
+
+
+__m128i SubBytes(__m128i &A)
+{
+    __m128i ISOLATE_SBOX_MASK = _mm_set_epi32(0x0306090C, 0x0F020508, 0x0B0E0104, 0x070A0D00);
+    A = _mm_shuffle_epi8(A, ISOLATE_SBOX_MASK);
+    __m128i ZERO = _mm_setzero_si128();
+    A = _mm_aesenclast_si128(A, ZERO);
+    return A;
+}
+
+
+void aesdec_inv(__m128i &A, __m128i B)
+{
+    A = _mm_xor_si128(A, B);
+    A = Mixcolumns(A);
+    A = SubBytes(A);
+    A = Shiftrows(A);
+}
+```
+
+这样，就实现了AES一轮解密整体的逆向。结合前面的总结构，最终实现了hash函数的逆向。
+
+#### 运行结果
+
 最终测试函数如下：
 
-将逆向还原的密钥放入key数组中，并再次使用这个key计算hash，并输出最终的hash值。
+将逆向还原的密钥放入key数组中，并再次使用这个key计算hash，输出最终的hash值。如果还原正确，那么输出的hash值应为给定的**"sdu_cst_20220610"**。
 
 ```c++
 int main()
@@ -416,12 +531,12 @@ int main()
 }
 ```
 
-结果见下图
+结果见下图，完全正确。
 
-![1](./result.png)
+![image-20220727215441410](./result.png)
 
 ------
 
-**注：由于本项目采用的是基于AES-NI指令集实现的aes加解密，而该指令集采取了等价加密的方式，从而导致一轮加密和一轮解密的密钥并不相同。这使得aes解密模块的逆向出现困难，不能还原出原来的密文。因此为简化模型，这里事实上将aes运算修改为简单的异或运算，便于还原。**
+#### 运行指导
 
-aes加解密是可逆的，理论上可以用任意一种可逆运算代替，影响的只是安全性。逆向还原的思路仍然适用，因此迫于时间不足，暂时搁置这个问题，后续有机会再做改进。
+在本项目文件夹下，打开meow_hash.sln项目文件，进入visual studio执行main函数即可。
