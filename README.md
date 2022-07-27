@@ -64,6 +64,10 @@
 
 在真实网络交互的场景下实现了基于argon2的口令检查方案。
 
+16. **Project: Find a 64-byte message under some k fulfilling that their hash value is symmetrical**
+
+找到一组64字节消息和密钥使得输出的hash值是对称的。
+
 ##### 存在问题的项目
 
 11. **Project: forge a signature to pretend that you are Satoshi**
