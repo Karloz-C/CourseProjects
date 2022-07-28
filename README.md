@@ -80,6 +80,10 @@
 
 找到一组64字节消息和密钥使得输出的hash值是对称的。
 
+17. **Project: send a tx on Bitcoin testnet, and parse the tx data down to every bit, better write script yourself**
+
+成功实现了在比特币测试网上申请比特币并发布一笔交易。同时编写脚本对于该交易原始数据进行了解析。
+
 ##### 存在问题的项目
 
 11. **Project: forge a signature to pretend that you are Satoshi**
@@ -148,3 +152,6 @@
 
 **Project: Find a 64-byte message under some k fulfilling that their hash value is symmetrical**
 
+22-07-28：提交项目
+
+**Project: send a tx on Bitcoin testnet, and parse the tx data down to every bit, better write script yourself**
