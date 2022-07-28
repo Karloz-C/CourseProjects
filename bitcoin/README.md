@@ -42,7 +42,7 @@
 
 点击查看交易详情
 
-<img src="C:\Users\Karloz\Desktop\Innovation-and-Entrepreneurship-Practice-Projects\bitcoin\image-20220728230905530.png" alt="image-20220728230905530" style="zoom: 50%;" />
+<img src="./image-20220728230905530.png" alt="image-20220728230905530" style="zoom: 50%;" />
 
 进一步地，通过API Call可以查看详细的交易JSON数据，提取出这些数据。
 
@@ -116,7 +116,7 @@
 
 可以在https://block.io/中创建一个testnet账户。当账户创建成功时，其会自动给与一个地址。此时我们可以使用前面记录的私钥将申请的0.0001个比特币提取出来到钱包中。这样事实上就又产生了一笔交易。
 
-<img src="C:\Users\Karloz\Desktop\Innovation-and-Entrepreneurship-Practice-Projects\bitcoin\image-20220728223730072.png" alt="image-20220728231531337" style="zoom:50%;" />
+<img src="./image-20220728223730072.png" alt="image-20220728231531337" style="zoom:50%;" />
 
 我们就选择这一条交易进行解析。
 
