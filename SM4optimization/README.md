@@ -169,12 +169,12 @@ inline void InitRoundKey(uint32_t* round_key, uint32_t* key)
 
 最终结果见下图：
 
-![image-20220729212910646](./result.png)
+<img src="./result.png" alt="image-20220729212910646" style="zoom:50%;" />
 
 可见，对于4MB的数据进行加密仅使用了0.03s。吞吐量达到了133MB/s。
 
 对比于成熟的openssl库函数：
 
-![image-20220729213549532](./compare.png)
+![image-20220729214541329](./compare.png)
 
 可见速度提高了约5倍，优化效果极佳。
