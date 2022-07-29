@@ -217,7 +217,7 @@ scriptPubKey = raw_data[idx + 20:idx + 20 + int(out_script_len, 16) * 2]
 
 打印提取的数据查看情况
 
-```json
+```python
 ver: 1
 vin_sz: 1
 prev_hash: 068b5110dc0661892e1b64b372ad1e7291201b0bcaecc0b71d620997882ff44e
@@ -312,7 +312,7 @@ print('script_analyse:', OP[scriptPubKey[:2]], scriptPubKey[2:-2], OP[scriptPubK
 
 得到结果：
 
-```json
+```python
 script analyse:
 PUSH_DATA r=276dc0d6822dc84f60d5d68b10a19ea0041b451175b67f94d874206198c08aa8 s=2060755d1061b9a45ebf366a9abbdebd86f3d81e068950e001de73c8b385c461 01 pubkey: dcecddaba2d7ef86cdbad5aa79aecd00593801d99deff79ca796b0dcd136908c
 
@@ -326,7 +326,7 @@ OP_HASH160 148901d45c15f2734ce3e5bc1654d362cd31624255 OP_EQUAL
 
 最终输出所有分析结果。
 
-![image-20220729135404313](C:\Users\Karloz\AppData\Roaming\Typora\typora-user-images\image-20220729135404313.png)
+![image-20220729135404313](./result.png)
 
 #### 运行指导
 
