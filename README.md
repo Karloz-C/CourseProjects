@@ -88,6 +88,10 @@
 
 关于Merkle Patricia Tree进行了详细的研究并产出一份研究报告。
 
+19. SM4优化
+
+对于SM4算法进行了显著优化。
+
 ##### 存在问题的项目
 
 11. **Project: forge a signature to pretend that you are Satoshi**
@@ -163,3 +167,5 @@
 22-07-29：提交项目
 
 **Project: research report on MPT**
+
+**SM4optimization**
