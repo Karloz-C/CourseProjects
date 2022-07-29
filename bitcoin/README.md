@@ -266,7 +266,7 @@ scriptPubKey：加锁脚本，不同类型解析方式不同。
 
 通过查找资料得到，pay-to-pubkey-hash类型的输入脚本格式如下：
 
-> PUSHDATA(<Cafe Signature>) <Cafe Public Key>
+> PUSHDATA(< Cafe Signature >) < Cafe Public Key >
 
 脚本的第一个字节是一个指令，表示将后续数据压入栈中。其封装格式为：
 
