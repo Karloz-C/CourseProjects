@@ -10,9 +10,9 @@
 - 存在问题的项目以及其中的问题
 - 更新日志
 
-具体到单个项目的代码说明等信息见各个项目文件夹中的README文档，这里不会涉及到。、
+具体到单个项目的代码说明等信息见各个项目文件夹中的README文档，这里不会涉及到。
 
-由于每天都可能会对已经上传的项目进行优化或修改完善，最后一次提交的时间通常比较集中，真实的完成时间可以参考下面的更新日志部分。
+**由于每天都可能会对已经上传的项目进行优化或修改完善，最后一次提交的时间通常比较集中，真实的完成时间可以参考下面的更新日志部分。**
 
 ### 所做项目及其简单说明
 
@@ -83,6 +83,10 @@
 17. **Project: send a tx on Bitcoin testnet, and parse the tx data down to every bit, better write script yourself**
 
 成功实现了在比特币测试网上申请比特币并发布一笔交易。同时编写脚本对于该交易原始数据进行了解析。
+
+18. **Project: research report on MPT**
+
+关于Merkle Patricia Tree进行了详细的研究并产出一份研究报告。
 
 ##### 存在问题的项目
 
@@ -155,3 +159,7 @@
 22-07-28：提交项目
 
 **Project: send a tx on Bitcoin testnet, and parse the tx data down to every bit, better write script yourself**
+
+22-07-29：提交项目
+
+**Project: research report on MPT**
