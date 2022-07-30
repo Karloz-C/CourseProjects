@@ -39,15 +39,11 @@ def verify(r, s, e, P):
 
 针对此过程，可以随机选择$u,v \in \mathbb{F}^*_n$，计算$R'=(x',y')=uG+vP$。
 
-根据验证等式，应当有：
-$$
-{s'}^{-1}(e'G+r'P)=uG+vP
-$$
-也即
-$$
-{s'}^{-1}e'=u \rightarrow e'=ruv^{-1}\ (mod\ n)\\
-{s'}^{-1}r'=u \rightarrow s'=rv^{-1}\ (mod\ n)\\
-$$
+根据验证等式，应当有：${s'}^{-1}(e'G+r'P)=uG+vP$
+
+也即   ${s'}^{-1}e'=u \rightarrow e'=ruv^{-1}\ (mod\ n),
+{s'}^{-1}r'=u \rightarrow s'=rv^{-1}\ (mod\ n)$
+
 计算得到$(r',s',e')$。这样就伪造了可以通过验证的签名值。
 
 ```python
