@@ -36,15 +36,15 @@ const char* N = "FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D5412
 class SM2RingSign
 {
 public:
-	int SIZE,ID;//ʹ��idȡkey�ļ�
+	int SIZE,ID;// 签名集合个数、用户ID
 	#pragma warning(suppress : 4996)
-	EC_GROUP* ecGroup = EC_GROUP_new(EC_GFp_mont_method());
+	EC_GROUP* ecGroup = EC_GROUP_new(EC_GFp_mont_method());// 椭圆曲线群E
 	BN_CTX* ctx = BN_CTX_new();
-	EC_POINT* G = EC_POINT_new(ecGroup);
+	EC_POINT* G = EC_POINT_new(ecGroup);// 基点
 	BIGNUM* order = BN_new();
 	BIGNUM** S = NULL;
-	string* PK = NULL;
-	string pk, sk;
+	string* PK = NULL;// 公钥集合
+	string pk, sk;// 节点公私钥
 	int index = -1;
 	
 	SM2RingSign(int size,int id) {
@@ -161,7 +161,7 @@ inline void SM2RingSign::setKey()
 	ifstream keystream(file);
 	if (!keystream.is_open())
 	{
-		cout << "δ�ɹ����ļ�" << endl;
+		cout << "file is not open" << endl;
 	}
 	getline(keystream, this->sk);
 	getline(keystream, this->pk);
@@ -176,7 +176,7 @@ inline void SM2RingSign::readPK()
 	{
 		getline(PKstream, PK[i]);
 	}
-	sort(this->PK, this->PK + SIZE);//Attention:�涨��Կ��С����ʹ��
+	sort(this->PK, this->PK + SIZE);//Attention
 	for (int i = 0; i < SIZE;i++)
 		if (pk.compare(PK[i]) == 0) index = i;
 	PKstream.close();
