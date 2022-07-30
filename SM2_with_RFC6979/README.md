@@ -1,5 +1,7 @@
 ### project: impl sm2 with RFC6979
 
+#### 代码说明
+
 RFC6979文档中关于确定性产生k的方法如下：
 
 ```
@@ -110,6 +112,7 @@ def deterministic_generate_k(msghash, sk):
     # V = HMAC_K（V）
     v = hmac.new(k, v, hashlib.sha256).digest()
 
+    # 若结果不在[1,q-1]范围中，则重复迭代
     while True:
         v = hmac.new(k, v, hashlib.sha256).digest()
         T = v
@@ -120,7 +123,36 @@ def deterministic_generate_k(msghash, sk):
         v = hmac.new(k, v, hashlib.sha256).digest()
 ```
 
+------
+
 得到k后，正常的构建sm2签名体系。
+
+```python
+def sign(msg, ID_str, d_A):
+    Z_A = encode(ENTL, 16) + ID_str + encode(a, 16) + encode(b, 16) + encode(x_G, 16) + encode(y_G, 16) + encode(P_A.x,
+                                                                                                                 16) + encode(
+        P_A.y, 16)
+    Z_A = hashlib.sha256(Z_A.encode()).hexdigest()
+    M = Z_A + encode(decode(msg, 256), 16)
+    e = decode(hashlib.sha256(M.encode()).hexdigest(), 16)
+    kG = k * G
+    r = (e + kG.x) % n
+    s = (inv_mod(1 + d_A, n) * (k - r * d_A)) % n
+    return r, s
+
+
+def verify(msg, r, s, ID_str):
+    Z_A = encode(ENTL, 16) + ID_str + encode(a, 16) + encode(b, 16) + encode(x_G, 16) + encode(y_G, 16) + encode(P_A.x,
+                                                                                                                 16) + encode(
+        P_A.y, 16)
+    Z_A = hashlib.sha256(Z_A.encode()).hexdigest()
+    M = Z_A + encode(decode(msg, 256), 16)
+    e = decode(hashlib.sha256(M.encode()).hexdigest(), 16)
+    t = (r + s) % n
+    pt = s * G + t * P_A
+    R = (e + pt.x) % n
+    return R == r
+```
 
 使用的参数为：
 
@@ -133,8 +165,14 @@ y_G = 0x0680512BCBB42C07D47349D2153B70C4E5D7FDFCBFA36EA1A85841B9E46E09A2
 n = 0x8542D69E4C044F18E8B92435BF6FF7DD297720630485628D5AE74EE7C32E79B7
 ```
 
-随机生成$d_A \in [2,q-1]$作为私钥。
+随机生成$d_A \in [2,q-1]$作为私钥，$P=d_A\cdot G$生成一条签名并进行签名验证。
+
+#### 运行结果
 
 最终签名及验证结果见下图：
 
 ![image-20220719211323572](./result.png)
+
+##### 运行指导
+
+在本项目文件夹SM2_with_RFC6979下，命令行使用python运行main.py。

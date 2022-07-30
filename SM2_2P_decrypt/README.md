@@ -102,4 +102,4 @@ def decrypt(sock, addr):
 
 先运行UserB.py，监听特定端口并做出回应。
 
-然后运行UserA.py即可。
+然后运行UserA.py即可。在UserA的终端会打印输出签名值，UserB无回显。
