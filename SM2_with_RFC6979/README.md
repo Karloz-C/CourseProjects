@@ -127,6 +127,10 @@ def deterministic_generate_k(msghash, sk):
 
 得到k后，正常的构建sm2签名体系。
 
+![image-20220731000011242](./algorithm.png)
+
+算法流程参考上图：
+
 ```python
 def sign(msg, ID_str, d_A):
     Z_A = encode(ENTL, 16) + ID_str + encode(a, 16) + encode(b, 16) + encode(x_G, 16) + encode(y_G, 16) + encode(P_A.x,

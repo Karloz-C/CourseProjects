@@ -92,6 +92,10 @@
 
 对于SM4算法进行了显著优化。
 
+20. SM2环签名方案
+
+基于SM2，使用openssl库实现了一个可在真实网络环境下运行的安全的，无条件匿名的环签名方案。
+
 ##### 存在问题的项目
 
 11. **Project: forge a signature to pretend that you are Satoshi**
@@ -169,3 +173,9 @@
 **Project: research report on MPT**
 
 **SM4optimization**
+
+22-07-30：
+
+提交项目 SM2环签名方案
+
+更新了多数项目的README，更加详细地说明了项目情况。
