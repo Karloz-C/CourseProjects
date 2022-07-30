@@ -28,3 +28,7 @@ char msg[] = "abcdefghabcdefghabcdefghabcdefghabcdefghabcdefghabcdefghabcdefgh";
 #### 运行指导
 
 在本项目文件夹中，打开vs项目meow_hash.sln，运行源文件即可。
+
+在github上下载项目后，打开进入可能被默认设置为64位模式，如果允许出现问题，可能与此有关。应当设置为32位模式。也即将下图中红框出修改为x86。
+
+![image-20220730171052404](./runguide.png)

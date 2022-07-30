@@ -72,13 +72,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\OpenSSL-Win32\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\OpenSSL-Win32\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Karloz\Desktop\Innovation-and-Entrepreneurship-Practice-Projects\OpenSSL-Win32\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Karloz\Desktop\Innovation-and-Entrepreneurship-Practice-Projects\OpenSSL-Win32\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\OpenSSL-Win32\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\OpenSSL-Win32\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Karloz\Desktop\Innovation-and-Entrepreneurship-Practice-Projects\OpenSSL-Win32\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Karloz\Desktop\Innovation-and-Entrepreneurship-Practice-Projects\OpenSSL-Win32\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
