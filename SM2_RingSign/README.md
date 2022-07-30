@@ -94,7 +94,7 @@ inline void SM2RingSign::genS()
 }
 ```
 
-我们使用BIGNUM中的BN_rand_range方法生成$Z_n$中的一个大随机数，在利用gcd判断是否互素。最终产生$Z_n^*$中的随机数，保存起来。
+我们使用BIGNUM中的BN_rand_range方法生成$Z_n$中的一个大随机数，再利用gcd判断是否互素。最终产生$Z_n^*$中的随机数，保存起来。
 
 ##### Hash函数
 
@@ -133,7 +133,12 @@ inline BIGNUM* SM2RingSign::H(string* PK, string msg, string Z)
 
 然后分别实现$Z_i,s_i,c_i$的计算。
 
-实现方法就是使用openssl提供的大数运算和椭圆曲线运算的接口来实现算法流程中的计算。原理完全依照算法描述，很容易理解。
+实现方法就是使用openssl提供的大数运算和椭圆曲线运算的接口来实现算法流程中的计算。原理完全依照算法描述，很容易理解，不再赘述。详情可以查看源代码中如下函数的定义。
+
+```c++
+	BIGNUM* culc_s(BIGNUM* k, BIGNUM* sk, BIGNUM* Ci);
+	string culc_z(string pk, BIGNUM* Ci, BIGNUM* Si);
+```
 
 ##### 签名生成
 
