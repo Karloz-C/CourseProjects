@@ -46,8 +46,10 @@ def padding(msg):
     return msg
 
 
+# 长度扩展构造的hash值，不需要知道密钥
 fake_hash = Length_Extend_Attack(message_hash, append_m)
 
+# 对扩展消息计算正确的hash
 new_msg = func.bytes_to_list(bytes(message, encoding='utf-8'))
 new_msg = padding(new_msg)
 new_msg.extend(func.bytes_to_list(bytes(append_m, encoding='utf-8')))
