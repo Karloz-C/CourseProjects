@@ -12,7 +12,7 @@ int main()
 	init();
 	SM3_CTX ctx;
 	start = clock();
-	FOR(i,0,1000000)
+	FOR(i,0,10000)
 	sm3(&ctx, msg, 64, dst);
 	end = clock();
 	for (int i = 0; i < 32; ++i)printf("%02x", dst[i]);
