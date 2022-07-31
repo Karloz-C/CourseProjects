@@ -24,11 +24,11 @@
 
 1. **Project: implement the naïve birthday attack of reduced SM3**
 
-对SM3哈希算法尝试进行生日攻击寻找碰撞。考虑到算力限制，截取hash值的前32位作为结果。前32位相同的视为找到一组碰撞。使用python代码实现并成功找到一组碰撞。
+对SM3哈希算法尝试进行生日攻击寻找碰撞。考虑到内存限制，截取hash值的前32位作为结果。前32位相同的视为找到一组碰撞。使用c代码实现并成功找到一组碰撞。
 
 2. **Project: implement the Rho method of reduced SM3**
 
-使用低存储的$\rho$方法寻找碰撞，解释性语言的运行速度慢，在可接受的时间内暂时只能找到16位的碰撞。
+使用低存储的$\rho$方法寻找碰撞，在可接受的时间内暂时只能找到16位的碰撞。
 
 3. **Project: implement length extension attack for SM3, SHA256, etc.**
 
@@ -36,7 +36,7 @@
 
 4. **Project: do your best to optimize SM3 implementation (software)**
 
-使用宏定义、SIMD等方法优化SM3。
+使用宏定义、SIMD、算法优化等方法优化SM3，效果显著。
 
 5. **Project: Impl Merkle Tree following RFC6962**
 
@@ -48,7 +48,7 @@
 
 7. **Project: impl sm2 with RFC6979**
 
-根据RFC6979实现了对k的生成，在此基础上实现SM2签名算法。
+根据RFC6979实现了对k的生成，在此基础上实现了SM2签名及其验证算法。
 
 8. **Project: Implement a PGP scheme with SM2**
 
@@ -64,9 +64,9 @@
 
 11. **Project: forge a signature to pretend that you are Satoshi**
 
-在不验证消息明文m的情况下，根据已有的正确签名伪造了新的签名，并正确通过验证。
+在不验证消息明文m而只使用消息哈希e的情况下，根据已有的正确签名伪造了新的签名，并正确通过验证。
 
-12. **Project: Find a key with hash value “sdu_cst_20220610” under a message composed of your name followed by your student ID. For example, “San Zhan 202000460001**
+12. **Project: Find a key with hash value “sdu_cst_20220610” under a message composed of your name followed by your student ID. For example, “San Zhan 202000460001**“
 
 针对meow_hash库，利用逆向工程原理，完整地将hash计算过程完全逆回初始状态，从而实现了根据消息明文和目标hash值计算出一组合适的密钥。并且使用所得密钥尝试进行hash，所得结果和目标值完全一致。
 
@@ -80,7 +80,7 @@
 
 15. **Project: PoC impl of the scheme, or do implement analysis by Google**
 
-在真实网络交互的场景下实现了基于argon2的口令检查方案。
+在真实网络交互的场景下实现了基于argon2的用户口令检查方案。
 
 16. **Project: Find a 64-byte message under some k fulfilling that their hash value is symmetrical**
 
@@ -126,7 +126,7 @@
 
 22-07-18：提交项目
 
-**Project: Find a key with hash value “sdu_cst_20220610” under a message composed of your name followed by your student ID. For example, “San Zhan 202000460001**
+**Project: Find a key with hash value “sdu_cst_20220610” under a message composed of your name followed by your student ID. For example, “San Zhan 202000460001**”
 
 22-07-19：提交项目
 
@@ -146,6 +146,10 @@
 
 **Project: implement sm2 2P decrypt with real network communication**
 
+22-07-23：提交项目
+
+**Project: forge a signature to pretend that you are Satoshi**
+
 22-07-25：
 
 提交项目
@@ -153,6 +157,8 @@
 **Project: verify the above pitfalls with proof-of-concept code**
 
 **Project: Implement the above ECMH scheme**
+
+**Project: report on the application of this deduce technique in Ethereum with ECDSA**
 
 更新了部分项目的README。
 
@@ -185,3 +191,9 @@
 提交项目 SM2环签名方案
 
 更新了多数项目的README，更加详细地说明了项目情况。
+
+使用c代码重构了对于sm3的生日攻击和$\rho$攻击，替代原本的python方案，更加稳定。
+
+22-07-31
+
+更新各个项目README，增加了更多图片和提示。
